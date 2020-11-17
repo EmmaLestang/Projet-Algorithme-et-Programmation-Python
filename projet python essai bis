@@ -103,6 +103,22 @@ def mediane(liste):
         mediane = tri[l//2]
     return mediane
 
+def rosee():
+    TR=[]
+    l=len(conv()[1])
+    for i in range(l-1):
+        alpha=((17.27*(conv()[1])[i])/(237.7+(conv()[1])[i]))+log((conv()[2])[i]/100)
+        TR.append((237.7*alpha)/(17.27-alpha))
+    return TR
+
+def humidex():
+    H=[]
+    l=len(conv()[1])
+    for i in range(l-1):
+        c=5417.7530*((1/273.16)-(1/(273.15+rosee()[i])))
+        a=(conv()[1])[i]+0.5555*(6.11*(exp(c))-10)
+        H.append(a)
+    return H
 def indcorrelation (liste1, liste2):
     sigma = 0
     l=len(liste1)
