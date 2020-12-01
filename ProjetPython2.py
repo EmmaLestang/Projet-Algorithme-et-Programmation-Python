@@ -14,19 +14,20 @@ import matplotlib.pyplot as plt
 
 
 
-#convertir csv to liste
+#On convertie le fichier csv en liste
 def conv (): 
     donnees = pd.read_csv(open('/Users/emmalestang/Desktop/EIVP/Algorithme et programmation/EIVP_KM.csv'),sep=';')
+    capteur=donnees["id"].tolist()
     noise=donnees["noise"].tolist()
     temp=donnees["temp"].tolist()
     humid=donnees["humidity"].tolist()
     lum=donnees["lum"].tolist()
     co2=donnees["co2"].tolist()
     date=(donnees["sent_at"].tolist())
-    return(noise,temp,humid,lum,co2,date)
+    return(noise,temp,humid,lum,co2,date,capteur)
 
+#Algorithme de tri permettant de detecter les anomalie dans les listes
 def tri(l_n,l_t,l_h,l_l,l_c,l_date):
-    #algoithme bubble sort
     l=len(l_date)
     for i in range(l-1) :
       for j in range(l-i-1)  :
@@ -39,27 +40,43 @@ def tri(l_n,l_t,l_h,l_l,l_c,l_date):
             l_c[j],l_c[j+1] = l_c[j+1],l_c[j]
     return  (l_n,l_t,l_h,l_l,l_c,l_date) 
 
-def choix():
+#On demande avec quelle donnée on veut travailler
+def choixdonnée():
     choix=input('choix données: 0-noise,1-temperature,2-humidite,3-luminosite,4-co2 : ')
     return int(choix)
 
-def graph():
-    plt.plot(tri(conv()[0],conv()[1],conv()[2],conv()[3],conv()[4],conv()[5])[5]
-             ,tri(conv()[0],conv()[1],conv()[2],conv()[3],conv()[4],conv()[5])[choix()])
+#On demande avec quel capteur on veut travailler
+def choixcapteur():
+    choixcapteur=input('choix du capteur : 1, 2, 3, 4, 5, 6 : ')
+    return int(choixcapteur)
 
+#Formation des listes en fonction du capteur et de la donnée
+def listeparcapteur():
+    L=[]
+    d=choixdonnée()
+    c=choixcapteur()
+    for i in range(len(conv()[6])):
+        if conv()[6][i]==c:
+            L.append(conv()[d][i])
+    return L
+
+#Tracé des courbes demandées
+def graph():
+    Y=[]
+    X=[]
+    d=choixdonnée()
+    c=choixcapteur()
+    for i in range(len(conv()[6])):
+        if conv()[6][i]==c:
+            Y.append(conv()[d][i])
+            X.append(conv()[5][i])
+    plt.plot(X,Y)
     plt.show()
     
-def graphsupperpose():
-    plt.plot(tri(conv()[0],conv()[1],conv()[2],conv()[3],conv()[4],conv()[5])[5]
-             ,tri(conv()[0],conv()[1],conv()[2],conv()[3],conv()[4],conv()[5])[choix()])
-    plt.plot(tri(conv()[0],conv()[1],conv()[2],conv()[3],conv()[4],conv()[5])[5]
-             ,tri(conv()[0],conv()[1],conv()[2],conv()[3],conv()[4],conv()[5])[choix()])
-    plt.show
-    
 ##############################################################################
 ##############################################################################
 
-def minimum(liste):
+def minimum(listep):
     minimum = liste[0]
     for i in range(1,len(liste)):
         if minimum > liste[i]:
@@ -138,6 +155,7 @@ def indcorrelation (liste1, liste2):
     id=sigma/(ecart_type(liste1)*ecart_type(liste2))
     return id
 
+#################################################################################################
 
 def comparaisonliste(liste1,liste2):
     l=len(liste1)
@@ -151,7 +169,6 @@ def comparaisonliste(liste1,liste2):
             C.append(L[j])
     return len(C)
         
-
 
 
 
